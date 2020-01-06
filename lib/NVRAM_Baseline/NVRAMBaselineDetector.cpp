@@ -4,12 +4,15 @@ NVRAMBaselineDetector::NVRAMBaselineDetector(
         double kalmanFilterCoefficient, 
         uint16_t addr, 
         uint16_t segments, 
+        uint32_t milliSecondsPerSegment,
         NVRAM * nvram,
         double (*chooseValueFunc)(double, double))
 	{
+        m_CurrentKalmanFilterValue = NAN;
         m_ChooseValue = chooseValueFunc;
         m_Segments = segments;
-        this->m_KalmanFilterCoefficient = kalmanFilterCoefficient;
+        m_MilliSecondsPerSegment = milliSecondsPerSegment;
+        m_KalmanFilterCoefficient = kalmanFilterCoefficient;
         m_Buffer = new CyclicNVRAMBuffer(addr, m_Segments, nvram);
         m_LastBufferUpdate = millis();
 	}
@@ -83,10 +86,12 @@ void NVRAMBaselineDetector::push(double value)
         m_CurrentTempBaseline = chooseValue(m_CurrentTempBaseline, kv);
     }
 
+    Serial.print(F(" | KV = "));
+    Serial.print(kv, 2);
     Serial.print(F(" | CTBL = "));
     Serial.println(m_CurrentTempBaseline, 2);
 
-    if (millis() - m_LastBufferUpdate > 5000)
+    if (millis() - m_LastBufferUpdate > m_MilliSecondsPerSegment)
     {
         m_Buffer->put(m_CurrentTempBaseline);
 
@@ -102,5 +107,7 @@ void NVRAMBaselineDetector::push(double value)
         updateCurrentBaseline();
 
         m_CurrentTempBaseline = NAN;
+
+        Serial.println(getCurrentBaseline());
     }
 }

@@ -32,7 +32,7 @@ double getMax(double x, double y)
 
 NVRAM nvram(framWrite, framRead);
 
-NVRAMBaselineDetector bd(0.05,  1000, 7*12,  &nvram, getMax);
+NVRAMBaselineDetector bd(0.05,  1000, 7*12, 5000,  &nvram, getMax);
 // NVRAMBaselineDetector bd1(0.05, getMax, 1000, 7*12, 2*60*60, &nvram);
 // NVRAMBaselineDetector bd2(0.05, getMax, 1000, 7*12, 2*60*60, &nvram);
 // NVRAMBaselineDetector bd3(0.05, getMax, 1000, 7*12, 2*60*60, &nvram);

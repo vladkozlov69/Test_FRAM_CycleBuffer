@@ -13,12 +13,14 @@ private:
     unsigned long m_LastBufferUpdate;
     double m_CurrentBaseLine;
     uint16_t m_Segments;
+    uint32_t m_MilliSecondsPerSegment;
     CyclicNVRAMBuffer * m_Buffer;
 public:
 	NVRAMBaselineDetector(
         double kalmanFilterCoefficient, 
         uint16_t addr, 
         uint16_t segments, 
+        uint32_t milliSecondsPerSegment,
         NVRAM * nvram,
         double (*chooseValueFunc)(double, double)); 
 
